@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="kk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="kk"><head><meta charset="utf-8"><meta name="referrer" content="no-referrer"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>5 STEPS AI — Инклюзивная учебная платформа</title>
 <style>
 :root{--navy:#17345c;--blue:#2878bd;--gold:#f0bd4f;--bg:#f3f6fb;--ink:#243247;--muted:#68788c;--line:#e1e8f0;--ok:#24643f;--okbg:#e8f7ed;--okline:#56a77a;--bad:#9b3b30;--badbg:#fff0ee;--badline:#d87b70}
@@ -458,7 +458,7 @@ async function speakLocal(phrase,id,slow){
  const voices=await voicesReady();if(id!==speakId)return;
  const v=chosenVoice(voices);
  // Есть голоса, но нет русского — не читаем русское слово иностранным голосом (получаются странные звуки).
- if(voices.length&&!v){setHearStatus(t('st_noru'));setVoiceInfo(t('vi_noru'));return}
+ if(!v){try{await playURL('https://translate.google.com/translate_tts?ie=UTF-8&tl=ru&client=tw-ob&q='+encodeURIComponent(phrase),id,slow);setVoiceInfo('');return}catch(e){}if(id!==speakId)return}
  // Точка в конце даёт спокойную, «утвердительную» интонацию — слово звучит чётче, без вопросительного подъёма.
  const say=/[.!?…]$/.test(phrase)?phrase:phrase+'.';
  try{const u=new SpeechSynthesisUtterance(say);u.lang=v?v.lang:'ru-RU';if(v)u.voice=v;u.rate=slow?.7:SPEECH_RATE[route];u.pitch=1;u.volume=1;let started=false;
