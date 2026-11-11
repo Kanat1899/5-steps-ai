@@ -478,7 +478,7 @@ async function fillVoicePicker(){const sel=$('voiceSel'),box=$('voicePick');if(!
  const cur=store.get(VOICE_KEY,'');
  sel.innerHTML=`<option value="">${esc(t('voiceAuto'))}</option>`+list.map(v=>`<option value="${esc(v.name)}"${v.name===cur?' selected':''}>${esc(v.name)}${voiceScore(v)>=30?' ★':''}</option>`).join('');
  box.hidden=false}
-if('speechSynthesis' in window){try{speechSynthesis.getVoices()}catch(e){}}
+if('speechSynthesis' in window){try{speechSynthesis.getVoices()}catch(e){}let unl=false;const unlock=()=>{if(unl)return;unl=true;try{const z=new SpeechSynthesisUtterance(' ');z.volume=0;speechSynthesis.speak(z)}catch(e){}};document.addEventListener('touchend',unlock,{once:true,capture:true});document.addEventListener('click',unlock,{once:true,capture:true})}
 
 // ---------- 3. ПОИГРАЙ / ОЙНА ----------
 function renderPlay(){const c=cfg();const pool=taskWords().filter(w=>w.replace(/\s/g,'').length>=3);const chosen=pickFreshWords(c.pairs,pool);
