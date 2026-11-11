@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>5 STEPS AI — Инклюзивная учебная платформа</title>
+<style>
+:root{--navy:#17345c;--blue:#2878bd;--gold:#f0bd4f;--bg:#f3f6fb;--ink:#243247;--muted:#68788c;--line:#e1e8f0;--ok:#24643f;--okbg:#e8f7ed;--okline:#56a77a;--bad:#9b3b30;--badbg:#fff0ee;--badline:#d87b70}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:var(--ink);font-size:18px;line-height:1.5}
+header{background:linear-gradient(120deg,#17345c,#2878bd);color:#fff;padding:26px max(18px,calc((100% - 1200px)/2))}
+.brand{font-size:13px;letter-spacing:2px;color:#ffdc8a;font-weight:bold}
+.hero{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+h1{font-size:clamp(30px,4vw,44px);margin:9px 0}
+header p{margin:0;line-height:1.5;color:#e6f0fb;max-width:740px;font-size:18px}
+.pill{padding:12px 16px;border:1px solid #ffffff55;border-radius:14px;background:#ffffff15;font-weight:bold;font-size:18px}
+main{max-width:1200px;margin:22px auto;padding:0 16px;display:grid;grid-template-columns:310px minmax(0,1fr);gap:18px}
+.card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:18px;box-shadow:0 5px 20px #17345c0a;min-width:0}
+h2{margin:0 0 12px;color:var(--navy);font-size:24px}
+h3{margin:15px 0 8px;color:var(--navy);font-size:20px}
+p{margin:10px 0}
+label{display:block;font-size:18px;font-weight:bold;color:#52647b;margin:12px 0 5px}
+select,input,textarea{width:100%;padding:11px;border:1px solid #ccd7e4;border-radius:9px;background:#fff;font:inherit;font-size:18px;color:var(--ink)}
+button{border:0;border-radius:9px;padding:10px 14px;background:var(--blue);color:#fff;font-weight:bold;cursor:pointer;font:inherit;font-size:18px;font-weight:bold;transition:transform .12s ease,filter .12s ease,background-color .2s ease,border-color .2s ease}
+button:hover:not(:disabled){filter:brightness(.96)}
+button:active:not(:disabled){transform:scale(.97)}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+button:disabled{cursor:default}
+button.alt{background:#eaf2fb;color:var(--navy)}
+button.gold{background:var(--gold);color:#45330a}
+.topicgrid{display:grid;grid-template-columns:1fr;gap:7px}
+.topicgrid button{background:#f1f5fa;color:#243247;text-align:left;font-weight:500}
+.topicgrid button.sel{outline:2px solid var(--gold);background:#fff8e7}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin:16px 0}
+.steps .step{background:#eff5fb;border:1px solid var(--line);border-radius:11px;padding:10px 3px;text-align:center;font-size:16px;font-weight:bold;color:var(--navy)}
+.steps .step b{display:block;font-size:24px;margin-bottom:4px}
+.steps .step.sel{background:#fff8e7;border-color:var(--gold);box-shadow:0 0 0 2px var(--gold) inset}
+.routes{display:flex;gap:7px;flex-wrap:wrap}
+.routes button{flex:1;min-width:150px;background:#eef3f9;color:var(--navy)}
+.routes button.sel{background:#fff2d1;outline:2px solid var(--gold)}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0}
+.tabs button{background:#eaf2fb;color:var(--navy)}
+.tabs button.sel{background:var(--navy);color:#fff}
+.panel{background:#fbfcff;border:1px solid var(--line);border-radius:13px;padding:16px;min-height:210px;line-height:1.55}
+.gridgame{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}
+.tile{background:#fff;border:2px solid #dce5ef;color:#243247;min-height:58px;font-size:20px;overflow-wrap:anywhere}
+.tile.letter{font-size:28px}
+.tile.chosen{border-color:var(--blue);background:#eaf5ff}
+.tile.done{border-color:var(--okline);background:var(--okbg);color:var(--ok)}
+.tile.wrong{border-color:var(--badline);background:var(--badbg);color:var(--bad)}
+.tile.used{opacity:.35}
+.tile:disabled:not(.done):not(.wrong):not(.used){opacity:.6}
+.big-word{font-size:28px;letter-spacing:1px;color:var(--navy)}
+.feedback{padding:10px 12px;border-radius:9px;background:#eef5fc;margin-top:10px;border:1px solid transparent}
+.feedback.ok{background:var(--okbg);color:var(--ok);border-color:#bfe3cc}
+.feedback.bad{background:var(--badbg);color:var(--bad);border-color:#f2c9c3}
+.feedback.hint{background:#fff8e7;color:#6b4d0c;border-color:#f3dca3}
+.sentence{min-height:52px;font-size:22px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.chip{background:#eaf2fb;color:var(--navy);border-radius:20px;padding:4px 12px;font-size:18px}
+.muted{color:var(--muted);font-size:18px;line-height:1.5}
+.small{font-size:18px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.record{padding:8px;background:#f5f8fc;border-radius:8px;margin:6px 0}
+.match-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+.match-columns>div{background:#f5f8fc;border:1px solid #dce5ef;border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:9px;min-width:0}
+.match-columns h4{margin:2px 0 6px;text-align:center;color:#24466b;font-size:18px}
+.match-tile{width:100%;min-height:52px;font-size:20px}
+.match-tile.chosen{outline:3px solid #e4b83e}
+.vpick label{display:inline;margin:0 6px 0 0;font-weight:normal;color:var(--muted)}
+.vpick select{width:auto;max-width:100%;padding:6px 8px}
+
+/* Простые анимации */
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes bounce{0%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}60%{transform:translateY(0)}80%{transform:translateY(-2px)}}
+.anim-pop{animation:pop .35s ease}
+.anim-shake{animation:shake .4s ease}
+.anim-fade{animation:fadeUp .3s ease both}
+.anim-bounce{animation:bounce .6s ease}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+@media(max-width:820px){main{grid-template-columns:1fr}.steps{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:520px){main{padding:0 8px}.card{padding:12px}.panel{padding:10px}.steps{grid-template-columns:repeat(2,1fr)}.gridgame{gap:7px}.match-columns{gap:8px}.match-columns>div{padding:6px}.match-tile,.tile{font-size:18px;padding:10px 4px}.routes button{min-width:100%}.match-columns.long{grid-template-columns:1fr}}
+/* На узком экране длинные слова не разрываются: карточки встают в один столбец */
+@media(max-width:420px){.gridgame.long{grid-template-columns:1fr}}
+@media print{header{padding:15px;background:#fff;color:#000}main{display:block}.card{box-shadow:none}.sidebar,.tabs,.routes,.bar,.steps{display:none!important}.panel{border:0}}
+.hero-side{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.langsw{display:flex;gap:4px;background:#ffffff1f;border:1px solid #ffffff44;padding:4px;border-radius:12px}
+.langsw button{background:transparent;color:#fff;padding:7px 14px;font-size:18px}
+.langsw button.sel{background:#fff;color:var(--navy)}
+@media(max-width:820px){.hero-side{align-items:flex-start}}
+@media print{.langsw{display:none!important}}
+</style></head>
+<body>
+<header><div class="brand" data-i18n="brand">АВТОРСКАЯ ИНКЛЮЗИВНАЯ МОДЕЛЬ</div><div class="hero"><div><h1>5 STEPS AI</h1><p data-i18n="subtitle"></p></div><div class="hero-side"><div class="langsw" role="group" aria-label="Тіл / Язык"><button data-lang="kk" lang="kk">Қазақша</button><button data-lang="ru" lang="ru">Русский</button></div><div class="pill" data-i18n="pill"></div></div></div></header>
+<main>
+<aside class="card sidebar">
+<h2 data-i18n="chooseLesson"></h2><label for="section" data-i18n="section"></label><select id="section" lang="ru"></select><h3 data-i18n="topics"></h3><div id="topics" class="topicgrid" lang="ru"></div>
+<hr style="border:0;border-top:1px solid var(--line);margin:17px 0"><h3 data-i18n="monitoring"></h3>
+<label for="student" data-i18n="studentCode"></label><input id="student" data-i18n-ph="studentPh" maxlength="30">
+<label for="progressStatus" data-i18n="result"></label><select id="progressStatus"><option value="support" data-i18n="st_support"></option><option value="hints" data-i18n="st_hints"></option><option value="self" data-i18n="st_self"></option></select>
+<button id="saveBtn" style="width:100%;margin-top:8px" data-i18n="save"></button>
+<div class="bar"><button class="alt" id="exportBtn" data-i18n="exportCsv"></button><button class="alt" id="clearBtn" data-i18n="clear"></button></div>
+<div id="progressList" class="muted" style="margin-top:10px" aria-live="polite"></div>
+</aside>
+<section class="card">
+<div class="brand" style="color:#b38319" data-i18n="constructor"></div><h2 id="lessonTitle" lang="ru"></h2><div class="muted" id="sectionTitle" lang="ru"></div>
+<div class="steps"><button class="step sel" data-tab="see"><b>🖼</b><span data-i18n="step_see"></span></button><button class="step" data-tab="hear"><b>🔊</b><span data-i18n="step_hear"></span></button><button class="step" data-tab="play"><b>🎮</b><span data-i18n="step_play"></span></button><button class="step" data-tab="build"><b>✍️</b><span data-i18n="step_build"></span></button><button class="step" data-tab="present"><b>🎤</b><span data-i18n="step_present"></span></button></div>
+<h3 data-i18n="routeH"></h3><div class="routes"><button class="sel" data-route="A" data-i18n="route_A"></button><button data-route="B" data-i18n="route_B"></button><button data-route="C" data-i18n="route_C"></button></div>
+<div class="tabs"><button class="sel" data-tab="see" data-i18n="tab_see"></button><button data-tab="hear" data-i18n="tab_hear"></button><button data-tab="play" data-i18n="tab_play"></button><button data-tab="build" data-i18n="tab_build"></button><button data-tab="present" data-i18n="tab_present"></button></div>
+<div id="activity" class="panel"></div>
+<div class="bar"><button class="alt" onclick="window.print()" data-i18n="print"></button><button class="alt" id="soundBtn"></button></div>
+<p class="muted" data-i18n="privacy"></p>
+</section></main>
+<script>
+const DEFAULT_LANG = 'ru';
+const DATA = [["Моя семья и друзья", [["Приветствие", ["здравствуй", "привет", "доброе утро", "до свидания"], ["Как ты поздороваешься утром?", "Что говорят при прощании?"]], ["Мои родственники", ["мама", "папа", "брат", "сестра"], ["Как ласково назвать маму?", "Назови двух членов семьи."]], ["Всё о моей семье", ["семья", "бабушка", "дедушка", "ребёнок"], ["Кто входит в семью?", "Составь предложение со словом «семья»."]], ["Друзья", ["друг", "подруга", "играть", "помогать"], ["Как можно помочь другу?", "Каким должен быть хороший друг?"]]]], ["Моя школа", [["Моя школа, мой класс", ["школа", "класс", "учитель", "ученик"], ["Где учатся дети?", "Кто ведёт урок?"]], ["Школьные принадлежности", ["книга", "ручка", "карандаш", "тетрадь"], ["Чем пишут в тетради?", "Что читают на уроке?"]], ["Школьные правила", ["слушать", "отвечать", "помогать", "уважать"], ["Как нужно слушать учителя?", "Почему важно уважать одноклассников?"]], ["День в школе", ["урок", "перемена", "звонок", "расписание"], ["Что начинается после звонка?", "Когда ученики отдыхают?"]]]], ["Мой родной край", [["Моя Родина — Казахстан", ["Казахстан", "Родина", "флаг", "герб"], ["Как называется наша Родина?", "Назови один государственный символ."]], ["Астана — столица Казахстана", ["Астана", "столица", "Байтерек", "город"], ["Как называется столица Казахстана?", "Назови известный символ Астаны."]], ["Родная земля", ["земля", "степь", "река", "родной"], ["Какая бывает родная природа?", "Составь фразу «Моя земля…»."]], ["Моя страна", ["страна", "народ", "язык", "дружба"], ["Как называется наша страна?", "Почему важно жить в дружбе?"]]]], ["Времена года", [["Зима", ["снег", "мороз", "ёлка", "санки"], ["Что падает зимой?", "На чём катаются дети?"]], ["Весна", ["солнце", "капель", "цветы", "птицы"], ["Что тает весной?", "Что распускается весной?"]], ["Лето", ["жара", "каникулы", "солнце", "цветы"], ["Когда бывают летние каникулы?", "Какая погода бывает летом?"]], ["Осень", ["листья", "дождь", "урожай", "ветер"], ["Какого цвета становятся листья?", "Что собирают осенью?"]]]], ["Традиции и фольклор", [["Традиции и обычаи казахского народа", ["традиция", "обычай", "гость", "уважение"], ["Как встречают гостей?", "Почему нужно уважать традиции?"]], ["Наши предки", ["предки", "история", "поколение", "наследие"], ["Кого называют предками?", "Что передают старшие поколения?"]], ["Сказка — душа народа", ["сказка", "герой", "добро", "волшебство"], ["Кто бывает героем сказки?", "Чему учат сказки?"]], ["Казахские национальные игры", ["асық", "арқан", "игра", "команда"], ["Назови одну национальную игру.", "Почему игры полезны?"]]]], ["В здоровом теле — здоровый дух", [["Моё тело", ["голова", "рука", "нога", "глаза"], ["Чем мы видим?", "Назови две части тела."]], ["Режим дня", ["утро", "завтрак", "урок", "сон"], ["Что делают утром?", "Почему важно вовремя ложиться спать?"]], ["Формула здоровья", ["спорт", "движение", "вода", "здоровье"], ["Что помогает быть здоровым?", "Почему нужно пить воду?"]], ["Чистота — залог здоровья", ["мыло", "вода", "чистота", "полотенце"], ["Чем моют руки?", "Когда нужно мыть руки?"]]]], ["Мир природы", [["Природа Казахстана", ["степь", "гора", "озеро", "река"], ["Назови объект природы.", "Чем отличается гора от реки?"]], ["Красная книга Казахстана", ["редкий", "животное", "защита", "природа"], ["Почему животных нужно защищать?", "Что означает слово «редкий»?"]], ["Наши домашние животные", ["кошка", "собака", "корова", "лошадь"], ["Какое животное охраняет дом?", "Назови домашнее животное."]], ["Такие разные птицы", ["орёл", "воробей", "лебедь", "гнездо"], ["Где живут птицы?", "Назови одну птицу."]]]], ["Чудеса вокруг нас", [["Байтерек — символ и чудо Казахстана", ["Байтерек", "монумент", "Астана", "символ"], ["В каком городе находится Байтерек?", "Что такое символ?"]], ["Волшебные звуки домбры", ["домбра", "кюй", "струна", "музыка"], ["На каком инструменте играют кюй?", "Сколько струн у традиционной домбры?"]], ["Легенда о Золотом человеке", ["золото", "доспех", "археолог", "легенда"], ["Что нашли археологи?", "Что такое легенда?"]], ["Степь полна жизни и чудес", ["степь", "тюльпан", "жаворонок", "простор"], ["Что растёт в степи?", "Какая птица поёт в степи?"]]]]];
+// Дополнительные слова: новые варианты заданий по каждой теме, не только первые четыре слова.
+const EXTRA_WORDS = [
+ [['добрый день','здравствуйте','добрый вечер','пока','приветствие','прощание'],['родители','сын','дочь','семья','родной','близкие'],['родители','дети','родной','любовь','вместе','забота'],['товарищ','весёлый','добрый','вместе','дружить','поддержка']],
+ [['здание','кабинет','доска','парта','класс','школьный'],['портфель','пенал','линейка','ластик','альбом','цветные карандаши'],['правило','вежливость','порядок','тишина','внимание','дисциплина'],['распорядок','завтрак','занятие','отдых','домой','расписание']],
+ [['столица','народ','страна','родной','независимость','праздник'],['город','площадь','монумент','улица','столица','красивый'],['родник','природа','поле','простор','родной','край'],['Казахстан','город','аул','народ','дружный','язык']],
+ [['холод','снежинка','зима','лыжи','коньки','снеговик'],['тепло','ручей','подснежник','трава','гнездо','весенний'],['отдых','море','пляж','путешествие','солнечный','купаться'],['листопад','тыква','овощи','фрукты','прохладно','золотой']],
+ [['бата','шашу','дастархан','Наурыз','гостеприимство','салт'],['ата','әже','бабушка','дедушка','память','прошлое'],['сказочник','сказочный','добрый','злой','чудо','мораль'],['көкпар','тоғызқұмалақ','бәйге','ловкость','соревнование','народный']],
+ [['лицо','нос','уши','рот','пальцы','тело'],['вечер','обед','полдник','рано','поздно','распорядок'],['зарядка','бег','прогулка','полезный','сильный','витамины'],['зубная щётка','шампунь','чистый','умывание','расчёска','гигиена']],
+ [['лес','пустыня','животные','растения','природный','красивый'],['сайгак','снежный барс','фламинго','защищать','исчезающий','заповедник'],['щенок','котёнок','телёнок','жеребёнок','кормить','заботиться'],['синица','ласточка','журавль','перья','крылья','летать']],
+ [['монумент','высокий','шар','ветви','столица','красота'],['домбра','музыкант','мелодия','народный','музыка','искусство'],['доспех','воин','древний','находка','история','золото'],['полынь','орёл','степь','растение','животное','природа']]
+];
+// Слова, которые явно НЕ относятся к разделу: для задания «Найди лишнее слово» и неверных вариантов ответа.
+const ODD_WORDS = [
+ ['тетрадь','снег','лошадь','домбра','мыло','гора'],
+ ['корова','мороз','тюльпан','лебедь','санки','жеребёнок'],
+ ['ластик','пенал','мыло','зубная щётка','полотенце','расчёска'],
+ ['тетрадь','учитель','домбра','герб','брат','пенал'],
+ ['ластик','пылесос','линейка','полотенце','зубная щётка','компьютер'],
+ ['герб','флаг','домбра','легенда','сказка','орёл'],
+ ['тетрадь','ручка','звонок','расписание','пенал','ластик'],
+ ['мыло','полотенце','ластик','тетрадь','зубная щётка','пенал']
+];
+// Настройки маршрутов A / B / C: количество карточек, пар, вариантов.
+const ROUTE = {
+ A:{cards:4,pairs:3,options:2,letters:3,syll:3},
+ B:{cards:6,pairs:4,options:3,letters:4,syll:4},
+ C:{cards:8,pairs:5,options:4,letters:6,syll:5}
+};
+// Казахские слова: в заданиях на звук, букву и слоги не используются (русский голос и русские правила к ним не подходят).
+const KAZ_WORDS = new Set(['бата','шашу','дастархан','салт','ата']);
+const VOWELS = 'аеёиоуыэюя';
+
+// =====================================================================
+// ЯЗЫК ИНТЕРФЕЙСА. Переводится только интерфейс (инструкции, кнопки, подсказки).
+// Учебный материал — русские слова, предложения, вопросы, названия тем — всегда остаётся на русском
+// и помечается lang="ru": это программа обучения РУССКОМУ языку.
+// =====================================================================
+const I18N={
+ru:{
+ title:'5 STEPS AI — Инклюзивная учебная платформа',brand:'АВТОРСКАЯ ИНКЛЮЗИВНАЯ МОДЕЛЬ',
+ subtitle:'«Одна цель — пять шагов к успеху» · интерактивная платформа обучения русскому языку во 2 классе.',
+ pill:'8 разделов · 32 темы · A / B / C',chooseLesson:'Выбор урока',section:'Раздел',topics:'Темы',
+ monitoring:'Мониторинг прогресса',studentCode:'Код ученика (без ФИО)',studentPh:'Например, Ученик 01',defaultStudent:'Ученик 01',result:'Результат',
+ st_support:'Выполнено с поддержкой',st_hints:'Выполнено с подсказками',st_self:'Выполнено самостоятельно',
+ save:'Сохранить результат',exportCsv:'⬇ Скачать CSV',clear:'🗑 Очистить',totalRecords:'Всего записей: {n}',noRecords:'Пока нет сохранённых результатов.',
+ saveFail:'Не удалось сохранить: браузер запретил хранение данных.',noExport:'Нет записей для выгрузки.',clearConfirm:'Удалить все сохранённые результаты? Это действие нельзя отменить.',
+ csvHead:'Дата;Ученик;Раздел;Тема;Маршрут;Результат',
+ constructor:'ИНТЕРАКТИВНЫЙ КОНСТРУКТОР УРОКА',
+ step_see:'УВИДЬ',step_hear:'УСЛЫШЬ',step_play:'ПОИГРАЙ',step_build:'СОСТАВЬ',step_present:'ПРЕДСТАВЬ',
+ tab_see:'1. УВИДЬ',tab_hear:'2. УСЛЫШЬ',tab_play:'3. ПОИГРАЙ',tab_build:'4. СОСТАВЬ',tab_present:'5. ПРЕДСТАВЬ',
+ routeH:'Индивидуальный маршрут',route_A:'A · С поддержкой',route_B:'B · С подсказками',route_C:'C · Самостоятельно',
+ print:'Печать / PDF',privacy:'Для защиты данных не вводите ФИО, адреса, телефоны и другие личные сведения детей. Прогресс хранится локально в браузере.',
+ newTask:'🔄 Новое задание',taskNo:'Задание №{n}',
+ snd_quiet:'🔉 Звук: тихо',snd_normal:'🔊 Звук: громче',snd_off:'🔕 Звук: выкл',sndTitle:'Нажми, чтобы изменить громкость: тихо → громче → выкл',
+ // УВИДЬ
+ see0Title:'Рассмотри и найди',see0Text:'Тема: <b>{t}</b>. Найди карточку со словом <b>«{w}»</b> и нажми на неё.',
+ routeLabel:'Маршрут {r}: ',see0HintA:'Прочитай слово вместе с учителем, потом найди его.',see0HintB:'Найди слово и назови его первую букву.',see0HintC:'Найди слово и придумай с ним предложение.',
+ see1Title:'Найди лишнее слово',see1Text:'Все слова, кроме одного, относятся к теме <b>«{t}»</b>. Найди слово, которое <b>не подходит</b>.',
+ see1HintA:'Подсказка: прочитай каждое слово и подумай, подходит ли оно к теме.',see1Hint:'Нажми на лишнее слово.',
+ see2Title:'Первая буква',see2Text:'Прочитай слово {w}. С какой буквы оно начинается?',see2HintA:'Подсказка: посмотри на самую первую букву слова.',see2Hint:'Выбери первую букву.',
+ see3Title:'Сколько слогов?',see3Text:'Прочитай слово {w} и прохлопай его в ладоши. Сколько в нём слогов?',see3Hint:'Подсказка: сколько в слове гласных букв — столько и слогов.',see3HintC:'Выбери число слогов.',
+ see_ok0:'Молодец! Ты нашёл(ла) слово «{v}». Прочитай его вслух.',see_ok1:'Верно! Слово «{v}» не относится к теме «{t}».',
+ see_ok2:'Правильно! Слово «{w}» начинается с буквы {v}.',see_ok3:'Правильно! В слове «{w}» {v} {syl}.',
+ see_bad0:'Это слово «{v}». Сравни буквы и попробуй ещё раз.',see_bad1:'Слово «{v}» подходит к теме. Ищи другое слово.',
+ see_bad2:'Не та буква. Посмотри на самую первую букву слова.',see_bad3:'Попробуй ещё раз. Сосчитай гласные: а, о, у, ы, э, я, ё, ю, и, е.',
+ // УСЛЫШЬ
+ hearTitle:'Послушай и выбери',hearText:'Нажми на кнопку, послушай слово и выбери его среди карточек.',listen:'🔊 Прослушать слово',slower:'🐢 Медленнее',
+ hearStart:'Нажми на кнопку и внимательно послушай.',hearOk:'Верно! Ты услышал(а) слово «{v}».',hearBad:'Не совпало. Послушай ещё раз и попробуй снова.',
+ st_noword:'Слово не выбрано.',st_prep:'🔊 Готовлю звук…',st_listen:'🔊 Слушай внимательно…',st_choose:'Теперь выбери услышанное слово.',
+ st_noplay:'Не получилось воспроизвести запись.',st_nosynth:'В этом браузере нет озвучивания. Попроси учителя прочитать слово.',
+ st_noru:'На этом устройстве нет русского голоса. Попроси учителя прочитать слово.',st_fail:'Не получилось озвучить. Попроси учителя прочитать слово.',
+ vi_online:'Голос: живой онлайн-голос',vi_voice:'Голос: {name}',
+ vi_weak:' · Для более живого голоса откройте страницу в Microsoft Edge: там есть бесплатные естественные голоса (Svetlana, Dmitry).',
+ vi_edgeOffline:' · Естественные голоса Edge работают при подключении к интернету.',
+ vi_noru:'Для учителя: на устройстве нет русского голоса. Откройте страницу в Microsoft Edge или Google Chrome либо добавьте русский голос: Параметры Windows → Время и язык → Речь.',
+ voiceLabel:'Голос устройства:',voiceAuto:'Авто — самый естественный',
+ // ПОИГРАЙ
+ playTitle:'Игра «Собери слово»',playHow:'<b>Как играть:</b> слева буквы в словах перепутаны, справа — правильные слова. Нажми на слово слева, потом найди справа слово из тех же букв. Например: {ex}.',
+ col1:'1. Буквы перепутаны',col2:'2. Правильные слова',playStart:'Найдено пар: 0 из {n}. Сначала выбери слово слева.',playOther:'Теперь выбери слово в другом столбике.',
+ playAll:'Отлично! Все пары найдены! 🎉',playOk:'Верно! Найдено пар: {m} из {n}.',playBad:'Пока не совпало. Сравни буквы и попробуй ещё раз.',
+ // СОСТАВЬ
+ b0Title:'Собери предложение',b0Desc:'Нажимай на слова по порядку и собери предложение.',b3Title:'Составь предложение из частей',b3Desc:'Нажимай на части по порядку и собери предложение.',
+ bHintA:'Подсказка: начни со слова «{w}». Точку поставь в конце. Первая буква станет заглавной сама.',yourSentence:'Твоё предложение:',
+ undo:'↩ Убрать последнее',reset:'🧹 Начать заново',check:'✅ Проверить',bStart:'Нажимай на слова, чтобы собрать предложение.',bReset:'Собери предложение заново.',
+ bIncomplete:'Используй все слова. Осталось: {n}.',bDot:'Точка ставится в конце предложения.',bPhrase:'Слова «{p}» должны стоять рядом и в таком порядке.',
+ bOrder:'Кто изучает? Сначала поставь «{x}», потом «{y}».',bGeneric:'Пока не совсем верно. Проверь порядок слов.',bWin:'Правильно! Отличная работа! 🎉',
+ c1Title:'Вставь пропущенное слово',c1Desc:'Выбери слово из изучаемой темы.',c2Title:'Выбери правильное продолжение',c2Desc:'Выбери слово, которое подходит к теме.',
+ c4Title:'Добавь подходящее слово',c4Desc:'Выбери изученное слово и закончи предложение.',cStart:'Выбери подходящий вариант.',cOk:'Правильно! Отличная работа!',
+ cBad:'«{v}» — слово не из этой темы. Попробуй ещё раз.',
+ // ПРЕДСТАВЬ
+ prTitle:'Представь результат',prTask:'Твоё задание:',
+ prA1:'Назови два слова по теме «{t}».',prA2:'Закончи фразу: «{f}». Используй слово-помощник.',prA3:'Скажи, что ты знаешь о теме «{t}».',
+ prB1:'Составь 2–3 предложения со словами: {h}.',prB2:'Ответь на вопрос: {q}',prB3:'Опиши тему «{t}» тремя предложениями.',
+ prC1:'Составь рассказ из 5–6 предложений по теме «{t}».',prC2:'Придумай заголовок и расскажи о теме «{t}».',prC3:'Используй слова {h} и составь связный рассказ.',
+ helpersAria:'Слова-помощники',myAnswer:'Мой ответ',answerPh:'Напиши свой ответ здесь...',checkAnswer:'✅ Проверить ответ',prStart:'Напиши ответ и нажми «Проверить ответ».',
+ prEmpty:'Напиши свой ответ.',prMoreWords:'Добавь ещё слов: сейчас {n}, нужно {w}.',prTopic:'Используй слова по теме (сейчас {u} из {tw}), например: {h}.',
+ prRepeat:'Не повторяй одно и то же слово много раз.',prRussian:'Пиши ответ по-русски.',prGood:'Хорошая работа! 🎉 Слов: {n}.',prUsed:' Слова по теме: {list}.',
+},
+kk:{
+ title:'5 STEPS AI — Инклюзивті оқу платформасы',brand:'АВТОРЛЫҚ ИНКЛЮЗИВТІ МОДЕЛЬ',
+ subtitle:'«Бір мақсат — табысқа бес қадам» · 2-сыныпта орыс тілін оқытуға арналған интерактивті платформа.',
+ pill:'8 бөлім · 32 тақырып · A / B / C',chooseLesson:'Сабақты таңдау',section:'Бөлім',topics:'Тақырыптар',
+ monitoring:'Үлгерім мониторингі',studentCode:'Оқушы коды (аты-жөнісіз)',studentPh:'Мысалы, Оқушы 01',defaultStudent:'Оқушы 01',result:'Нәтиже',
+ st_support:'Қолдаумен орындады',st_hints:'Кеңеспен орындады',st_self:'Өз бетімен орындады',
+ save:'Нәтижені сақтау',exportCsv:'⬇ CSV жүктеу',clear:'🗑 Тазалау',totalRecords:'Барлық жазба: {n}',noRecords:'Әзірге сақталған нәтиже жоқ.',
+ saveFail:'Сақталмады: браузер деректерді сақтауға тыйым салды.',noExport:'Жүктейтін жазба жоқ.',clearConfirm:'Барлық сақталған нәтижені өшіру керек пе? Бұл әрекетті қайтару мүмкін емес.',
+ csvHead:'Күні;Оқушы;Бөлім;Тақырып;Бағыт;Нәтиже',
+ constructor:'ИНТЕРАКТИВТІ САБАҚ КОНСТРУКТОРЫ',
+ step_see:'КӨР',step_hear:'ТЫҢДА',step_play:'ОЙНА',step_build:'ҚҰРАСТЫР',step_present:'ҰСЫН',
+ tab_see:'1. КӨР',tab_hear:'2. ТЫҢДА',tab_play:'3. ОЙНА',tab_build:'4. ҚҰРАСТЫР',tab_present:'5. ҰСЫН',
+ routeH:'Жеке бағыт',route_A:'A · Қолдаумен',route_B:'B · Кеңеспен',route_C:'C · Өз бетімен',
+ print:'Басып шығару / PDF',privacy:'Деректерді қорғау үшін балалардың аты-жөнін, мекенжайын, телефонын және басқа жеке мәліметтерін енгізбеңіз. Үлгерім тек осы браузерде сақталады.',
+ newTask:'🔄 Жаңа тапсырма',taskNo:'Тапсырма №{n}',
+ snd_quiet:'🔉 Дыбыс: ақырын',snd_normal:'🔊 Дыбыс: қаттырақ',snd_off:'🔕 Дыбыс: өшірулі',sndTitle:'Дыбыс деңгейін өзгерту үшін бас: ақырын → қаттырақ → өшірулі',
+ // КӨР
+ see0Title:'Қара да тап',see0Text:'Тақырып: <b>{t}</b>. <b>«{w}»</b> сөзі жазылған карточканы тауып, оны бас.',
+ routeLabel:'{r} бағыты: ',see0HintA:'Сөзді мұғаліммен бірге оқы, содан кейін оны тап.',see0HintB:'Сөзді тауып, оның бірінші әрпін ата.',see0HintC:'Сөзді тауып, онымен орысша сөйлем құра.',
+ see1Title:'Артық сөзді тап',see1Text:'Бір сөзден басқасының бәрі <b>«{t}»</b> тақырыбына қатысты. <b>Сәйкес келмейтін</b> сөзді тап.',
+ see1HintA:'Кеңес: әр сөзді оқып, оның тақырыпқа сай келетінін ойлан.',see1Hint:'Артық сөзді бас.',
+ see2Title:'Бірінші әріп',see2Text:'{w} сөзін оқы. Ол қай әріптен басталады?',see2HintA:'Кеңес: сөздің ең бірінші әрпіне қара.',see2Hint:'Бірінші әріпті таңда.',
+ see3Title:'Неше буын?',see3Text:'{w} сөзін оқып, алақаныңды соғып буынға бөл. Бұл сөзде неше буын бар?',see3Hint:'Кеңес: сөзде қанша дауысты әріп болса, сонша буын болады.',see3HintC:'Буын санын таңда.',
+ see_ok0:'Жарайсың! Сен «{v}» сөзін таптың. Оны дауыстап оқы.',see_ok1:'Дұрыс! «{v}» сөзі «{t}» тақырыбына қатысты емес.',
+ see_ok2:'Дұрыс! «{w}» сөзі {v} әрпінен басталады.',see_ok3:'Дұрыс! «{w}» сөзінде {v} буын бар.',
+ see_bad0:'Бұл — «{v}» сөзі. Әріптерді салыстырып, тағы байқап көр.',see_bad1:'«{v}» сөзі тақырыпқа сай келеді. Басқа сөзді ізде.',
+ see_bad2:'Бұл басқа әріп. Сөздің ең бірінші әрпіне қара.',see_bad3:'Тағы байқап көр. Дауысты әріптерді сана: а, о, у, ы, э, я, ё, ю, и, е.',
+ // ТЫҢДА
+ hearTitle:'Тыңда да таңда',hearText:'Батырманы басып, сөзді тыңда да, оны карточкалардың ішінен таңда.',listen:'🔊 Сөзді тыңдау',slower:'🐢 Баяуырақ',
+ hearStart:'Батырманы басып, мұқият тыңда.',hearOk:'Дұрыс! Сен «{v}» сөзін естідің.',hearBad:'Сәйкес келмеді. Тағы бір рет тыңдап, қайта байқап көр.',
+ st_noword:'Сөз таңдалмаған.',st_prep:'🔊 Дыбыс дайындалуда…',st_listen:'🔊 Мұқият тыңда…',st_choose:'Енді естіген сөзіңді таңда.',
+ st_noplay:'Жазбаны ойнату мүмкін болмады.',st_nosynth:'Бұл браузерде дыбыстау жоқ. Мұғалімнен сөзді оқып беруін сұра.',
+ st_noru:'Бұл құрылғыда орыс тіліндегі дауыс жоқ. Мұғалімнен сөзді оқып беруін сұра.',st_fail:'Дыбыстау мүмкін болмады. Мұғалімнен сөзді оқып беруін сұра.',
+ vi_online:'Дауыс: тірі онлайн-дауыс',vi_voice:'Дауыс: {name}',
+ vi_weak:' · Дауыс тірірек болуы үшін бетті Microsoft Edge-де ашыңыз: онда тегін табиғи дауыстар бар (Svetlana, Dmitry).',
+ vi_edgeOffline:' · Edge-дің табиғи дауыстары интернетке қосылғанда жұмыс істейді.',
+ vi_noru:'Мұғалімге: құрылғыда орыс тіліндегі дауыс жоқ. Бетті Microsoft Edge немесе Google Chrome-да ашыңыз, не орыс дауысын қосыңыз: Windows параметрлері → Уақыт және тіл → Сөйлеу.',
+ voiceLabel:'Құрылғы дауысы:',voiceAuto:'Авто — ең табиғи дауыс',
+ // ОЙНА
+ playTitle:'«Сөзді құрастыр» ойыны',playHow:'<b>Қалай ойнаймыз:</b> сол жақта сөздердің әріптері араласып кеткен, оң жақта — дұрыс сөздер. Сол жақтағы сөзді бас, содан кейін оң жақтан дәл сол әріптерден тұратын сөзді тап. Мысалы: {ex}.',
+ col1:'1. Әріптері араласқан',col2:'2. Дұрыс сөздер',playStart:'Табылған жұп: 0 / {n}. Алдымен сол жақтан сөз таңда.',playOther:'Енді екінші бағаннан сөз таңда.',
+ playAll:'Керемет! Барлық жұп табылды! 🎉',playOk:'Дұрыс! Табылған жұп: {m} / {n}.',playBad:'Әзірге сәйкес келмеді. Әріптерді салыстырып, тағы байқап көр.',
+ // ҚҰРАСТЫР
+ b0Title:'Сөйлем құрастыр',b0Desc:'Сөздерді ретімен басып, орысша сөйлем құрастыр.',b3Title:'Бөліктерден сөйлем құрастыр',b3Desc:'Бөліктерді ретімен басып, орысша сөйлем құрастыр.',
+ bHintA:'Кеңес: «{w}» сөзінен баста. Нүктені соңына қой. Бірінші әріп өзі бас әріпке айналады.',yourSentence:'Сенің сөйлемің:',
+ undo:'↩ Соңғысын алып тастау',reset:'🧹 Қайта бастау',check:'✅ Тексеру',bStart:'Сөйлем құрастыру үшін сөздерді бас.',bReset:'Сөйлемді қайта құрастыр.',
+ bIncomplete:'Барлық сөзді қолдан. Қалғаны: {n}.',bDot:'Нүкте сөйлемнің соңына қойылады.',bPhrase:'«{p}» сөздері қатар және осы ретпен тұруы керек.',
+ bOrder:'Кім оқиды? Алдымен «{x}», содан кейін «{y}» сөзін қой.',bGeneric:'Әзірге толық дұрыс емес. Сөздердің ретін тексер.',bWin:'Дұрыс! Тамаша жұмыс! 🎉',
+ c1Title:'Түсіп қалған сөзді қой',c1Desc:'Оқып жатқан тақырыптан сөз таңда.',c2Title:'Дұрыс жалғасын таңда',c2Desc:'Тақырыпқа сай келетін сөзді таңда.',
+ c4Title:'Лайықты сөзді қос',c4Desc:'Оқыған сөзіңді таңдап, сөйлемді аяқта.',cStart:'Лайықты нұсқаны таңда.',cOk:'Дұрыс! Тамаша жұмыс!',
+ cBad:'«{v}» — бұл тақырыптың сөзі емес. Тағы байқап көр.',
+ // ҰСЫН
+ prTitle:'Нәтижеңді ұсын',prTask:'Сенің тапсырмаң:',
+ prA1:'«{t}» тақырыбы бойынша орысша екі сөз ата.',prA2:'«{f}» деген орысша сөйлемді аяқта. Көмекші сөзді қолдан.',prA3:'«{t}» тақырыбы туралы не білетініңді орысша айт.',
+ prB1:'Мына сөздермен 2–3 орысша сөйлем құрастыр: {h}.',prB2:'Сұраққа орысша жауап бер: {q}',prB3:'«{t}» тақырыбын үш орысша сөйлеммен сипатта.',
+ prC1:'«{t}» тақырыбы бойынша 5–6 сөйлемнен тұратын орысша әңгіме құрастыр.',prC2:'Тақырып ойлап тауып, «{t}» туралы орысша әңгімеле.',prC3:'{h} сөздерін қолданып, байланысты орысша әңгіме құрастыр.',
+ helpersAria:'Көмекші сөздер',myAnswer:'Менің жауабым (орысша)',answerPh:'Жауабыңды осында орысша жаз...',checkAnswer:'✅ Жауапты тексеру',prStart:'Жауабыңды жазып, «Жауапты тексеру» батырмасын бас.',
+ prEmpty:'Жауабыңды жаз.',prMoreWords:'Тағы сөз қос: қазір {n}, керегі {w}.',prTopic:'Тақырып сөздерін қолдан (қазір {u} / {tw}), мысалы: {h}.',
+ prRepeat:'Бір сөзді қайта-қайта қайталама.',prRussian:'Жауабыңды орысша жаз.',prGood:'Жақсы жұмыс! 🎉 Сөз саны: {n}.',prUsed:' Тақырып сөздері: {list}.',
+}};
+const store={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},set(k,v){try{localStorage.setItem(k,v);return true}catch(e){return false}}};
+const LANG_KEY='5steps-lang@'+location.pathname;
+let LANG=(()=>{let q=null;try{q=new URLSearchParams(location.search).get('lang')}catch(e){}if(q==='kk'||q==='ru')return q;const s=store.get(LANG_KEY,'');return (s==='kk'||s==='ru')?s:(DEFAULT_LANG==='kk'?'kk':'ru')})();
+function t(k,p){let s=I18N[LANG][k];if(s==null)s=I18N.ru[k];if(s==null)return k;return p?s.replace(/\{(\w+)\}/g,(m,x)=>p[x]!=null?p[x]:m):s}
+function ru(s){return `<span lang="ru">${esc(s)}</span>`}      // русский учебный материал внутри текста интерфейса
+function applyStatic(){document.documentElement.lang=LANG;document.title=t('title');
+ document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=t(e.dataset.i18n));
+ document.querySelectorAll('[data-i18n-ph]').forEach(e=>e.placeholder=t(e.dataset.i18nPh));
+ document.querySelectorAll('[data-lang]').forEach(b=>{b.classList.toggle('sel',b.dataset.lang===LANG);b.setAttribute('aria-pressed',String(b.dataset.lang===LANG))})}
+function setLang(l){if(l!==LANG){LANG=l;store.set(LANG_KEY,l)}applyStatic();renderTopics();renderSoundBtn();renderProgress();renderActivity()}
+
+let si=0, ti=0, route='A', tab='see';
+let counters={see:0,hear:0,play:0,build:0,present:0};
+let S={};            // состояние текущего задания
+let usedTaskSets={};
+
+const $=id=>document.getElementById(id);
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function shuffle(arr){let a=[...arr];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function rnd(arr){return arr[Math.floor(Math.random()*arr.length)]}
+function upFirst(s){return s?s[0].toLocaleUpperCase('ru-RU')+s.slice(1):s}
+function plural(n,f){const m10=n%10,m100=n%100;return f[(m10===1&&m100!==11)?0:(m10>=2&&m10<=4&&(m100<10||m100>=20))?1:2]}
+function topic(){return DATA[si][1][ti]}
+function words(){return topic()[1]}
+function cfg(){return ROUTE[route]}
+function taskWords(){return [...new Set([...words(),...EXTRA_WORDS[si][ti]])]}
+function isKazakh(w){return /[әіңғүұқөһ]/i.test(w)||KAZ_WORDS.has(w.toLowerCase())}
+function ruWords(){return taskWords().filter(w=>!isKazakh(w))}
+function sectionWords(){return new Set(DATA[si][1].flatMap((x,i)=>[...x[1],...EXTRA_WORDS[si][i]]).map(w=>w.toLowerCase()))}
+function oddWords(n){const sw=sectionWords();return shuffle(ODD_WORDS[si].filter(w=>!sw.has(w.toLowerCase()))).slice(0,n)}
+function syllables(w){return [...w.toLowerCase()].filter(c=>VOWELS.includes(c)).length}
+function pickFreshWords(count,pool){pool=pool||taskWords();const key=[si,ti,tab,route,S.mode].join('-');const used=usedTaskSets[key]||(usedTaskSets[key]=[]);let pick,signature,tries=0;do{pick=shuffle(pool).slice(0,Math.min(count,pool.length));signature=[...pick].sort().join('|');tries++}while(used.includes(signature)&&tries<40);used.push(signature);if(used.length>30)used.shift();return pick}
+function scrambleWord(word){return word.split(' ').map(part=>{const lower=part.toLocaleLowerCase('ru-RU');const cap=part!==lower&&part[0]!==lower[0];const chars=[...lower];if(chars.length<2)return part;let mixed=chars;for(let i=0;i<20;i++){mixed=shuffle(chars);if(mixed.join('')!==lower)break}if(mixed.join('')===lower)mixed=[...chars.slice(1),chars[0]];const out=mixed.join('');return cap?upFirst(out):out}).join(' ')}
+function letterKey(s){return [...s.toLocaleLowerCase('ru-RU').replace(/\s+/g,'')].sort().join('')}
+
+// ---------- Звуки (Web Audio, без файлов и интернета) ----------
+// Мягкие чистые тона (синус), низкий регистр, плавная атака — без «гудков» и резких высоких нот.
+const SOUND_LEVELS=[{key:'quiet',gain:.45},{key:'normal',gain:.8},{key:'off',gain:0}];
+const Sound={ctx:null,master:null,level:Math.max(0,SOUND_LEVELS.findIndex(l=>l.key===store.get('5steps-sound','quiet'))),
+ get on(){return SOUND_LEVELS[this.level].gain>0},
+ build(ctx){const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=3200;const m=ctx.createGain();m.gain.value=SOUND_LEVELS[this.level].gain;m.connect(lp);lp.connect(ctx.destination);return m},
+ init(){if(this.ctx)return this.ctx;const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;try{this.ctx=new C();this.master=this.build(this.ctx)}catch(e){this.ctx=null}return this.ctx},
+ tone(f,at,dur,o={}){const c=this.ctx,tt=c.currentTime+at,osc=c.createOscillator(),g=c.createGain(),att=o.attack||.02;osc.type='sine';osc.frequency.setValueAtTime(f,tt);if(o.to)osc.frequency.exponentialRampToValueAtTime(o.to,tt+dur);g.gain.setValueAtTime(0,tt);g.gain.linearRampToValueAtTime(o.gain||.2,tt+att);g.gain.exponentialRampToValueAtTime(.0001,tt+dur);osc.connect(g);g.connect(this.master);osc.start(tt);osc.stop(tt+dur+.05)},
+ note(f,at,dur,gain){this.tone(f,at,dur,{gain});this.tone(f*2,at,dur*.5,{gain:gain*.1})}, // мягкая «колокольчиковая» нота
+ play(kind){if(!this.on)return;const c=this.init();if(!c)return;try{if(c.state==='suspended')c.resume();
+  if(kind==='ok'){            // правильно: два мягких «динь-дон» вверх (ми → си)
+   this.note(659.25,0,.35,.22);this.note(987.77,.1,.5,.2);
+  }else if(kind==='bad'){     // ошибка: тихое низкое «оу-оу» вниз, чистый тон — не пугает
+   this.tone(311,0,.2,{gain:.16,to:277,attack:.03});this.tone(262,.17,.32,{gain:.14,to:220,attack:.03});
+  }else if(kind==='win'){     // всё выполнено: короткое мягкое арпеджио до–ми–соль–до
+   [523.25,659.25,783.99].forEach((f,i)=>this.note(f,i*.12,.4,.18));this.note(1046.5,.36,.7,.15);
+  }else if(kind==='tap'){this.tone(587,0,.06,{gain:.04})}
+ }catch(e){}},
+ cycle(){this.level=(this.level+1)%SOUND_LEVELS.length;store.set('5steps-sound',SOUND_LEVELS[this.level].key);if(this.master)this.master.gain.value=SOUND_LEVELS[this.level].gain;renderSoundBtn();this.play('tap')}
+};
+function renderSoundBtn(){const b=$('soundBtn');b.textContent=t('snd_'+SOUND_LEVELS[Sound.level].key);b.title=t('sndTitle')}
+
+// ---------- Анимация и обратная связь ----------
+function anim(el,cls){if(!el)return;el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);el.addEventListener('animationend',()=>el.classList.remove(cls),{once:true})}
+// «…» внутри подсказок — русский учебный материал: помечаем lang="ru" (экранный диктор читает по-русски).
+function markRu(text){return esc(text).replace(/«([^»<]*)»/g,'«<span lang="ru">$1</span>»')}
+function fb(id,text,kind){const el=$(id);if(!el)return;el.innerHTML=markRu(text);el.className='feedback'+(kind?' '+kind:'');anim(el,kind==='ok'?'anim-bounce':'anim-fade')}
+function good(el,id,text,sound){if(el){el.classList.add('done');anim(el,'anim-pop')}fb(id,text,'ok');Sound.play(sound||'ok')}
+function bad(el,id,text){if(el){el.classList.add('wrong');anim(el,'anim-shake')}fb(id,text,'bad');Sound.play('bad')}
+function lockTiles(){document.querySelectorAll('#activity .tile').forEach(b=>b.disabled=true)}
+function maxTok(list){return Math.max(0,...list.flatMap(x=>String(x).split(/\s+/)).map(x=>x.length))}
+function wlang(x){return isKazakh(String(x))?'kk':'ru'}
+function tiles(list,act,extra){return `<div class="gridgame${maxTok(list)>=11?' long':''}">${list.map(x=>`<button class="tile ${extra||''}" lang="${wlang(x)}" data-act="${act}" data-val="${esc(x)}">${esc(x)}</button>`).join('')}</div>`}
+function fbBox(id,text,kind){return `<div id="${id}" class="feedback${kind?' '+kind:''}" aria-live="polite">${markRu(text)}</div>`}
+
+// ---------- Навигация ----------
+function init(){
+ DATA.forEach((x,i)=>{let o=document.createElement('option');o.value=i;o.textContent=(i+1)+'. '+x[0];$('section').append(o)});
+ $('section').onchange=e=>{si=+e.target.value;ti=0;resetCounters();renderTopics();renderActivity()};
+ document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+ document.querySelectorAll('[data-route]').forEach(b=>b.addEventListener('click',()=>setRoute(b.dataset.route)));
+ document.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>setLang(b.dataset.lang)));
+ $('activity').addEventListener('click',onActivityClick);
+ $('activity').addEventListener('change',e=>{if(e.target.id==='voiceSel'){store.set(VOICE_KEY,e.target.value);speak(S.answer)}});
+ $('saveBtn').onclick=saveProgress;$('exportBtn').onclick=exportProgress;$('clearBtn').onclick=clearProgress;
+ $('soundBtn').onclick=()=>Sound.cycle();
+ applyStatic();renderSoundBtn();renderTopics();renderActivity();renderProgress();
+}
+function resetCounters(){counters={see:0,hear:0,play:0,build:0,present:0}}
+function renderTopics(){$('topics').innerHTML='';DATA[si][1].forEach((x,i)=>{let b=document.createElement('button');b.textContent=x[0];b.className=i===ti?'sel':'';b.onclick=()=>{ti=i;resetCounters();renderTopics();renderActivity()};$('topics').append(b)});$('lessonTitle').textContent=topic()[0];$('sectionTitle').textContent=DATA[si][0]}
+function setRoute(r){route=r;document.querySelectorAll('[data-route]').forEach(b=>b.classList.toggle('sel',b.dataset.route===r));renderActivity()}
+function showTab(x){tab=x;document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('sel',b.dataset.tab===x));renderActivity()}
+function freshButton(n){return `<div class="bar"><button class="gold" data-act="new">${esc(t('newTask'))}</button><span class="muted">${esc(t('taskNo',{n}))}</span></div>`}
+
+function onActivityClick(e){const b=e.target.closest('button[data-act]');if(!b||b.disabled)return;const h={new:()=>renderActivity(true),see:()=>onSee(b),hear:()=>onHear(b),speak:()=>speak(S.answer),'speak-slow':()=>speak(S.answer,true),pair:()=>pickPair(b),word:()=>addWord(b),undo:undoWord,reset:resetWords,check:checkSentence,choice:()=>onChoice(b),present:checkPresentation}[b.dataset.act];if(h)h()}
+
+// advance=true — следующий вид задания; иначе тот же вид с новыми словами
+function renderActivity(advance){
+ stopSpeech();
+ if(advance||counters[tab]===0)counters[tab]++;
+ const n=counters[tab],tp=topic()[0];S={n,mode:0};let html='';
+ if(tab==='see')html=renderSee(n,tp);
+ else if(tab==='hear')html=renderHear();
+ else if(tab==='play')html=renderPlay();
+ else if(tab==='build')html=renderBuild(n,tp);
+ else html=renderPresent(n,tp);
+ const a=$('activity');a.innerHTML=html+freshButton(n);anim(a,'anim-fade');
+ if(tab==='build'&&S.spec)showBuilt();
+}
+
+// ---------- 1. УВИДЬ / КӨР ----------
+function renderSee(n,tp){const c=cfg();const mode=(n-1)%4;S.mode=mode;
+ if(mode===0){const cards=pickFreshWords(c.cards);S.answer=rnd(cards);
+  const hint=t('see0Hint'+route);
+  return `<h3>${esc(t('see0Title'))}</h3><p>${t('see0Text',{t:ru(tp),w:ru(S.answer)})}</p>${tiles(cards,'see')}${fbBox('seeFeedback',t('routeLabel',{r:route})+hint)}`}
+ if(mode===1){const k=Math.max(3,c.cards-1);const topicW=pickFreshWords(k);const odd=oddWords(1)[0];S.answer=odd;const cards=shuffle([...topicW,odd]);
+  return `<h3>${esc(t('see1Title'))}</h3><p>${t('see1Text',{t:ru(tp)})}</p>${tiles(cards,'see')}${fbBox('seeFeedback',route==='A'?t('see1HintA'):t('see1Hint'))}`}
+ if(mode===2){const pool=ruWords();const target=pickFreshWords(1,pool)[0];S.target=target;const L=w=>w[0].toLocaleUpperCase('ru-RU');S.answer=L(target);
+  const opts=new Set([S.answer]);shuffle(pool.map(L)).forEach(x=>{if(opts.size<c.letters)opts.add(x)});shuffle([...'АБВГДЕЖЗИКЛМНОПРСТУФХЧШЯ']).forEach(x=>{if(opts.size<c.letters)opts.add(x)});
+  return `<h3>${esc(t('see2Title'))}</h3><p>${t('see2Text',{w:`<b class="big-word" lang="ru">${esc(target)}</b>`})}</p>${tiles(shuffle([...opts]),'see','letter')}${fbBox('seeFeedback',route==='A'?t('see2HintA'):t('see2Hint'))}`}
+ const pool=ruWords().filter(w=>!w.includes(' ')&&syllables(w)>0);const target=pickFreshWords(1,pool)[0];const s=syllables(target);S.target=target;S.answer=String(s);
+ const start=Math.max(1,s-Math.floor(Math.random()*c.syll));const opts=[];for(let i=start;i<start+c.syll;i++)opts.push(String(i));
+ return `<h3>${esc(t('see3Title'))}</h3><p>${t('see3Text',{w:`<b class="big-word" lang="ru">${esc(target)}</b>`})}</p>${tiles(opts,'see','letter')}${fbBox('seeFeedback',route==='C'?t('see3HintC'):t('see3Hint'),route==='C'?'':'hint')}`
+}
+function onSee(el){stopSpeech();const v=el.dataset.val,m=S.mode,tp=topic()[0];
+ if(v===S.answer){lockTiles();good(el,'seeFeedback',t('see_ok'+m,{v,t:tp,w:S.target,syl:plural(+v,['слог','слога','слогов'])}))}
+ else{el.disabled=true;bad(el,'seeFeedback',t('see_bad'+m,{v}))}
+}
+
+// ---------- 2. УСЛЫШЬ / ТЫҢДА ----------
+function renderHear(){const c=cfg();const cards=pickFreshWords(c.cards,ruWords());S.answer=rnd(cards);
+ const html=`<h3>${esc(t('hearTitle'))}</h3><p>${esc(t('hearText'))}</p><div class="bar"><button class="gold" data-act="speak">${esc(t('listen'))}</button><button class="alt" data-act="speak-slow">${esc(t('slower'))}</button><span id="hearStatus" class="muted" aria-live="polite"></span></div>${tiles(cards,'hear')}${fbBox('hearFeedback',t('hearStart'))}<p class="muted small" id="voiceInfo"></p><p class="muted small vpick" id="voicePick" hidden><label for="voiceSel">${esc(t('voiceLabel'))}</label> <select id="voiceSel"></select></p>`;
+ setTimeout(fillVoicePicker,0);
+ return html}
+function onHear(el){stopSpeech();const v=el.dataset.val;if(v===S.answer){lockTiles();good(el,'hearFeedback',t('hearOk',{v}))}else{el.disabled=true;bad(el,'hearFeedback',t('hearBad'))}}
+
+function downloadBlob(name,blob){const url=URL.createObjectURL(blob);const l=document.createElement('a');l.href=url;l.download=name;document.body.append(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+
+// ---------- Озвучка (всегда русские слова) ----------
+// Порядок: 1) живой нейроголос OpenAI (Netlify-функция tts — если сайт размещён на Netlify с ключом);
+//          2) самый естественный русский голос устройства (нейронные голоса Edge, «Google русский», Milena…).
+// Каждое нажатие отменяет предыдущее, поэтому два голоса никогда не звучат одновременно.
+let curPlayer=null,ttsOnlineFailed=false,speakId=0,speakWatch=null;const ttsCache=new Map();
+const SPEECH_RATE={A:.85,B:.95,C:1};
+const VOICE_KEY='5steps-voice-name';
+function setHearStatus(m){const s=$('hearStatus');if(s)s.textContent=m}
+function setVoiceInfo(m){const s=$('voiceInfo');if(s)s.textContent=m}
+function dataURLToBlob(u){const [head,b64]=u.split(',');const mime=(head.match(/data:([^;]+)/)||[])[1]||'audio/mpeg';const raw=atob(b64),a=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)a[i]=raw.charCodeAt(i);return new Blob([a],{type:mime})}
+function stopSpeech(){speakId++;clearTimeout(speakWatch);try{if(curPlayer){curPlayer.pause();curPlayer=null}}catch(e){}try{if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}}
+async function playURL(url,id,slow){const p=new Audio(url);p.playbackRate=slow?.8:1;try{p.preservesPitch=true}catch(e){}curPlayer=p;
+ p.onended=()=>{if(curPlayer===p){curPlayer=null;setHearStatus(t('st_choose'))}};
+ await p.play();if(id!==speakId){p.pause();return}setHearStatus(t('st_listen'))}
+async function speak(text,slow){
+ const phrase=String(text||'').trim();if(!phrase){setHearStatus(t('st_noword'));return}
+ stopSpeech();const id=speakId;setHearStatus(t('st_prep'));
+ if(/^https?:$/.test(location.protocol)&&!ttsOnlineFailed){
+  try{await speakOnline(phrase,id,slow);return}
+  catch(err){if(id!==speakId)return;ttsOnlineFailed=true;console.warn('Онлайн-голос недоступен, используется голос устройства.',err)}
+ }
+ if(id!==speakId)return;
+ await speakLocal(phrase,id,slow);
+}
+async function speakOnline(phrase,id,slow){
+ let url=ttsCache.get(phrase);
+ if(!url){
+  const ctrl=new AbortController();const timer=setTimeout(()=>ctrl.abort(),6000); // ребёнок не ждёт дольше 6 с
+  try{
+   const r=await fetch('/.netlify/functions/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:phrase}),signal:ctrl.signal});
+   if(!r.ok)throw new Error('HTTP '+r.status);
+   const data=await r.json();if(!data||typeof data.audio!=='string'||!data.audio)throw new Error('нет аудио в ответе');
+   url=URL.createObjectURL(dataURLToBlob('data:audio/mpeg;base64,'+data.audio));ttsCache.set(phrase,url); // повтор — мгновенно и бесплатно
+  }finally{clearTimeout(timer)}
+ }
+ if(id!==speakId)return;                     // ребёнок уже нажал что-то другое — не говорим
+ await playURL(url,id,slow);
+ setVoiceInfo(t('vi_online'));
+}
+function voicesReady(){return new Promise(res=>{let v=[];try{v=speechSynthesis.getVoices()}catch(e){}if(v.length)return res(v);let done=false;const fin=()=>{if(done)return;done=true;let x=[];try{x=speechSynthesis.getVoices()}catch(e){}res(x)};try{speechSynthesis.addEventListener('voiceschanged',fin,{once:true})}catch(e){}setTimeout(fin,1500)})}
+// Чем естественнее голос, тем выше балл: нейронные (Natural/Online) → Premium/Enhanced → Google → остальные.
+function voiceScore(v){const n=v.name||'';let s=0;if(/natural|neural/i.test(n))s+=60;if(/online/i.test(n))s+=20;if(/premium|enhanced|улучш/i.test(n))s+=45;if(/google/i.test(n))s+=30;if(/svetlana|dariya|milena|katya|alyona|светлана|милена|алёна/i.test(n))s+=8;if(v.localService===false)s+=5;if(/^ru[-_]RU$/i.test(v.lang))s+=3;return s}
+function ruVoices(list){return list.filter(v=>/^ru([-_]|$)/i.test(v.lang)).sort((a,b)=>voiceScore(b)-voiceScore(a))}
+function bestRuVoice(list){return ruVoices(list)[0]||null}
+// Голос, выбранный учителем в списке (если он есть на этом устройстве), иначе — самый естественный.
+function chosenVoice(list){const name=store.get(VOICE_KEY,'');const r=ruVoices(list);return (name&&r.find(v=>v.name===name))||r[0]||null}
+function isEdge(){return /Edg\//.test(navigator.userAgent)}
+function voiceTip(v){if(voiceScore(v)>=30)return '';return isEdge()?t('vi_edgeOffline'):t('vi_weak')}
+async function speakLocal(phrase,id,slow){
+ if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){setHearStatus(t('st_nosynth'));return}
+ const voices=await voicesReady();if(id!==speakId)return;
+ const v=chosenVoice(voices);
+ // Есть голоса, но нет русского — не читаем русское слово иностранным голосом (получаются странные звуки).
+ if(voices.length&&!v){setHearStatus(t('st_noru'));setVoiceInfo(t('vi_noru'));return}
+ // Точка в конце даёт спокойную, «утвердительную» интонацию — слово звучит чётче, без вопросительного подъёма.
+ const say=/[.!?…]$/.test(phrase)?phrase:phrase+'.';
+ try{const u=new SpeechSynthesisUtterance(say);u.lang=v?v.lang:'ru-RU';if(v)u.voice=v;u.rate=slow?.7:SPEECH_RATE[route];u.pitch=1;u.volume=1;let started=false;
+  u.onstart=()=>{started=true;if(id===speakId){clearTimeout(speakWatch);setHearStatus(t('st_listen'))}};
+  u.onend=()=>{if(id===speakId){clearTimeout(speakWatch);setHearStatus(t('st_choose'))}};
+  u.onerror=e=>{if(id===speakId&&e.error!=='canceled'&&e.error!=='interrupted'){clearTimeout(speakWatch);setHearStatus(t('st_fail'))}};
+  setVoiceInfo(v?t('vi_voice',{name:v.name})+voiceTip(v):'');
+  try{speechSynthesis.resume()}catch(e){}   // Chrome иногда «залипает» на паузе
+  speechSynthesis.speak(u);
+  speakWatch=setTimeout(()=>{if(id===speakId&&!started)setHearStatus(t('st_fail'))},6000);  // если голос так и не зазвучал — честно сообщаем
+ }catch(e){setHearStatus(t('st_fail'))}
+}
+// Список голосов устройства для учителя (появляется, если русских голосов несколько).
+async function fillVoicePicker(){const sel=$('voiceSel'),box=$('voicePick');if(!sel||!box||!('speechSynthesis' in window))return;
+ const list=ruVoices(await voicesReady());if(!$('voiceSel'))return;
+ if(list.length<2){box.hidden=true;return}
+ const cur=store.get(VOICE_KEY,'');
+ sel.innerHTML=`<option value="">${esc(t('voiceAuto'))}</option>`+list.map(v=>`<option value="${esc(v.name)}"${v.name===cur?' selected':''}>${esc(v.name)}${voiceScore(v)>=30?' ★':''}</option>`).join('');
+ box.hidden=false}
+if('speechSynthesis' in window){try{speechSynthesis.getVoices()}catch(e){}}
+
+// ---------- 3. ПОИГРАЙ / ОЙНА ----------
+function renderPlay(){const c=cfg();const pool=taskWords().filter(w=>w.replace(/\s/g,'').length>=3);const chosen=pickFreshWords(c.pairs,pool);
+ S.pairs=chosen.length;S.matched=0;S.selected=null;
+ const scr=[];chosen.forEach(w=>{let s,tries=0;do{s=scrambleWord(w);tries++}while((chosen.some(x=>x.toLowerCase()===s.toLowerCase())||scr.includes(s))&&tries<30);scr.push(s)});
+ const left=shuffle(chosen.map((w,i)=>scr[i])),right=shuffle(chosen);
+ const col=(list,side)=>list.map(x=>`<button class="tile match-tile" lang="${wlang(x)}" data-act="pair" data-side="${side}" data-val="${esc(x)}">${esc(x)}</button>`).join('');
+ return `<h3>${esc(t('playTitle'))}</h3><p>${t('playHow',{ex:`<b lang="ru">«амам» → «мама»</b>`})}</p><div class="match-columns${maxTok(chosen)>=9?' long':''}"><div><h4>${esc(t('col1'))}</h4>${col(left,'left')}</div><div><h4>${esc(t('col2'))}</h4>${col(right,'right')}</div></div>${fbBox('matchFeedback',t('playStart',{n:S.pairs}))}`}
+function pickPair(el){
+ if(el.classList.contains('done'))return;
+ if(!S.selected){S.selected=el;el.classList.add('chosen');Sound.play('tap');return}
+ if(S.selected===el){el.classList.remove('chosen');S.selected=null;return}
+ if(S.selected.dataset.side===el.dataset.side){S.selected.classList.remove('chosen');S.selected=el;el.classList.add('chosen');Sound.play('tap');fb('matchFeedback',t('playOther'),'');return}
+ const a=S.selected,b=el;a.classList.remove('chosen');S.selected=null;
+ if(letterKey(a.dataset.val)===letterKey(b.dataset.val)){
+  [a,b].forEach(x=>{x.classList.add('done');x.disabled=true;anim(x,'anim-pop')});S.matched++;
+  if(S.matched===S.pairs){fb('matchFeedback',t('playAll'),'ok');Sound.play('win')}
+  else{fb('matchFeedback',t('playOk',{m:S.matched,n:S.pairs}),'ok');Sound.play('ok')}
+ }else{[a,b].forEach(x=>anim(x,'anim-shake'));fb('matchFeedback',t('playBad'),'bad');Sound.play('bad')}
+}
+
+// ---------- 4. СОСТАВЬ / ҚҰРАСТЫР (предложения — всегда на русском) ----------
+function renderBuild(n,tp){const c=cfg();const mode=(n-1)%5;S.mode=mode;const a=pickFreshWords(1)[0];S.word=a;S.spec=null;
+ if(mode===0||mode===3){
+  const spec=mode===0
+   ?{title:t('b0Title'),desc:t('b0Desc'),tokens:['сегодня','я','изучаю','слово','«'+a+'»','.'],phrases:[['изучаю','слово','«'+a+'»']],before:[['я','изучаю']],first:'сегодня'}
+   :{title:t('b3Title'),desc:t('b3Desc'),tokens:['сегодня','на','уроке','я','изучаю','тему','«'+tp+'»','.'],phrases:[['на','уроке'],['изучаю','тему','«'+tp+'»']],before:[['я','изучаю']],first:'сегодня'};
+  S.spec=spec;S.built=[];S.tries=0;S.solved=false;
+  const bank=shuffle(spec.tokens.map((x,i)=>({x,i})));
+  const hint=route==='A'?fbBox('buildHint',t('bHintA',{w:upFirst(spec.first)}),'hint'):'';
+  return `<h3>${esc(spec.title)}</h3><p>${esc(spec.desc)}</p>${hint}<div class="gridgame" id="wordBank">${bank.map(o=>`<button class="tile" lang="ru" data-act="word" data-idx="${o.i}">${esc(o.x)}</button>`).join('')}</div><p><b>${esc(t('yourSentence'))}</b></p><div class="feedback sentence" id="sentenceResult" lang="ru"></div><div class="bar"><button class="alt" data-act="undo">${esc(t('undo'))}</button><button class="alt" data-act="reset">${esc(t('reset'))}</button><button data-act="check">${esc(t('check'))}</button></div>${fbBox('sentenceFeedback',t('bStart'))}`}
+ const opts=shuffle([a,...oddWords(c.options-1)]);
+ S.answer=mode===2?'«'+a+'».':a;
+ const list=mode===2?opts.map(x=>'«'+x+'».'):opts;
+ const z=mode===1?{title:t('c1Title'),desc:t('c1Desc'),prompt:'На уроке по теме «'+tp+'» я узнал(а) слово «___».'}
+  :mode===2?{title:t('c2Title'),desc:t('c2Desc'),prompt:'В теме «'+tp+'» мы изучаем слово …'}
+  :{title:t('c4Title'),desc:t('c4Desc'),prompt:'Новое слово по теме «'+tp+'» — ___.'};
+ return `<h3>${esc(z.title)}</h3><p>${esc(z.desc)}</p><div class="feedback" style="font-size:22px" lang="ru">${esc(z.prompt)}</div>${tiles(list,'choice')}${fbBox('sentenceFeedback',t('cStart'))}`
+}
+function builtTokens(){return S.built.map(i=>S.spec.tokens[i])}
+function showBuilt(){const el=$('sentenceResult');if(!el)return;const toks=builtTokens();el.textContent=toks.length?upFirst(toks.join(' ').replace(/\s+([.,!?])/g,'$1')):'…'}
+function addWord(el){if(S.solved)return;S.built.push(+el.dataset.idx);el.disabled=true;el.classList.add('used');Sound.play('tap');showBuilt();anim($('sentenceResult'),'anim-fade')}
+function undoWord(){if(S.solved||!S.built.length)return;const i=S.built.pop();const b=document.querySelector('#wordBank [data-idx="'+i+'"]');if(b){b.disabled=false;b.classList.remove('used')}showBuilt()}
+function resetWords(){if(S.solved)return;S.built=[];document.querySelectorAll('#wordBank .tile').forEach(b=>{b.disabled=false;b.classList.remove('used')});showBuilt();fb('sentenceFeedback',t('bReset'),'')}
+// Проверка с учётом свободного порядка слов в русском языке: правила, а не одна строка.
+function checkOrder(seq,spec){
+ if(seq.length<spec.tokens.length)return{ok:false,msg:t('bIncomplete',{n:spec.tokens.length-seq.length})};
+ if(seq[seq.length-1]!=='.')return{ok:false,msg:t('bDot')};
+ for(const ph of spec.phrases){const i=seq.indexOf(ph[0]);if(i<0||ph.some((w,k)=>seq[i+k]!==w))return{ok:false,msg:t('bPhrase',{p:ph.join(' ')})}}
+ for(const [x,y] of spec.before){if(seq.indexOf(x)>seq.indexOf(y))return{ok:false,msg:t('bOrder',{x,y})}}
+ return{ok:true};
+}
+function checkSentence(){if(!S.spec||S.solved)return;S.tries++;const res=checkOrder(builtTokens(),S.spec);
+ if(res.ok){S.solved=true;document.querySelectorAll('#activity [data-act="word"],#activity [data-act="undo"],#activity [data-act="reset"],#activity [data-act="check"]').forEach(b=>b.disabled=true);const r=$('sentenceResult');r.classList.add('ok');anim(r,'anim-pop');fb('sentenceFeedback',t('bWin'),'ok');Sound.play('win')}
+ else{anim($('sentenceResult'),'anim-shake');const msg=(route==='C'&&S.tries===1)?t('bGeneric'):res.msg;fb('sentenceFeedback',msg,'bad');Sound.play('bad')}
+}
+function onChoice(el){const v=el.dataset.val;if(v===S.answer){lockTiles();good(el,'sentenceFeedback',t('cOk'))}else{el.disabled=true;bad(el,'sentenceFeedback',t('cBad',{v:v.replace(/[«».]/g,'')}))}}
+
+// ---------- 5. ПРЕДСТАВЬ / ҰСЫН (ответ ребёнка — на русском) ----------
+function renderPresent(n,tp){const helpers=pickFreshWords(route==='A'?3:route==='B'?4:5);S.helpers=helpers;const q=topic()[2]||[];
+ const R=ru(tp),H=helpers.map(ru).join(', '),Q=ru(q[(n-1)%Math.max(q.length,1)]||'Что ты знаешь об этой теме?');
+ const P={
+  A:[{k:'prA1',w:2,tw:2,s:0},{k:'prA2',w:3,tw:1,s:0},{k:'prA3',w:3,tw:1,s:0}],
+  B:[{k:'prB1',w:8,tw:2,s:2},{k:'prB2',w:4,tw:1,s:1},{k:'prB3',w:9,tw:2,s:3}],
+  C:[{k:'prC1',w:25,tw:3,s:5},{k:'prC2',w:15,tw:3,s:3},{k:'prC3',w:20,tw:4,s:3}]
+ }[route];
+ const p=P[(n-1)%P.length];S.req=p;
+ const text=t(p.k,{t:R,h:H,q:Q,f:ru('Мне нравится…')});
+ const need=LANG==='kk'
+  ?'Қажет: кемінде '+p.w+' сөз, тақырып бойынша '+p.tw+' сөз'+(p.s?', '+p.s+' сөйлем':'')+'.'
+  :'Нужно: не меньше '+p.w+' '+plural(p.w,['слова','слов','слов'])+', '+p.tw+' '+plural(p.tw,['слово','слова','слов'])+' по теме'+(p.s?', '+p.s+' '+plural(p.s,['предложение','предложения','предложений']):'')+'.';
+ return `<h3>${esc(t('prTitle'))}</h3><p><b>${esc(t('prTask'))}</b> ${text}</p><p class="muted small">${esc(need)}</p><div class="chips" aria-label="${esc(t('helpersAria'))}">${helpers.map(w=>`<span class="chip" lang="${wlang(w)}">${esc(w)}</span>`).join('')}</div><label for="presentation">${esc(t('myAnswer'))}</label><textarea id="presentation" rows="5" lang="ru" spellcheck="true" placeholder="${esc(t('answerPh'))}"></textarea><div class="bar"><button data-act="present">${esc(t('checkAnswer'))}</button></div>${fbBox('presentationFeedback',t('prStart'))}`}
+function normText(s){return String(s).toLocaleLowerCase('ru-RU').replace(/ё/g,'е')}
+function textTokens(s){return normText(s).split(/[^a-zа-яәіңғүұқөһ]+/i).filter(Boolean)}
+function stem(w){return w.length>=6?w.slice(0,-2):w.length>=4?w.slice(0,-1):w}
+function usesWord(toks,word){return normText(word).split(/\s+/).every(p=>{const st=stem(p);return toks.some(x=>x.startsWith(st))})}
+function checkPresentation(){
+ const v=$('presentation').value.trim(),p=S.req;
+ if(!v){fb('presentationFeedback',t('prEmpty'),'bad');Sound.play('bad');return}
+ const toks=textTokens(v),n=toks.length;
+ const used=taskWords().filter(w=>usesWord(toks,w));
+ const sentences=v.split(/[.!?…]+/).filter(x=>textTokens(x).length>0).length;
+ const freq={};toks.forEach(w=>freq[w]=(freq[w]||0)+1);const maxRepeat=Math.max(0,...Object.values(freq));
+ // Ответ должен быть на русском: слова с казахскими или латинскими буквами (кроме слов темы) — сигнал.
+ const topicSet=new Set(taskWords().map(normText));
+ const foreign=toks.filter(x=>/[әіңғүұқөһa-z]/i.test(x)&&!topicSet.has(x)).length;
+ const problems=[];
+ if(n>=2&&foreign/n>.2)problems.push(t('prRussian'));
+ if(n<p.w)problems.push(t('prMoreWords',{n,w:p.w}));
+ if(used.length<p.tw)problems.push(t('prTopic',{u:used.length,tw:p.tw,h:S.helpers.slice(0,3).map(w=>'«'+w+'»').join(', ')}));
+ if(p.s&&sentences<p.s)problems.push(LANG==='kk'?'Кемінде '+p.s+' сөйлем жаз. Әр сөйлемнің соңына нүкте қой.':'Напиши не меньше '+p.s+' '+plural(p.s,['предложения','предложений','предложений'])+'. В конце каждого ставь точку.');
+ if(n>=5&&maxRepeat/n>.4)problems.push(t('prRepeat'));
+ if(!problems.length){fb('presentationFeedback',t('prGood',{n})+(used.length?t('prUsed',{list:used.map(w=>'«'+w+'»').join(', ')}):''),'ok');Sound.play('win')}
+ else{fb('presentationFeedback',problems.join(' '),'bad');Sound.play('bad')}
+}
+
+// ---------- Мониторинг прогресса ----------
+const STATUS_LEGACY={'Выполнено с поддержкой':'support','Выполнено с подсказками':'hints','Выполнено самостоятельно':'self'};
+function statusLabel(x){const k=x.statusKey||STATUS_LEGACY[x.status];return k?t('st_'+k):(x.status||'')}
+function loadProgress(){try{const a=JSON.parse(store.get('5steps-progress','[]'));return Array.isArray(a)?a:[]}catch(e){return[]}}
+function saveProgress(){const a=loadProgress();a.unshift({student:$('student').value.trim()||t('defaultStudent'),section:DATA[si][0],topic:topic()[0],route,statusKey:$('progressStatus').value,date:new Date().toLocaleDateString('ru-RU')});
+ if(store.set('5steps-progress',JSON.stringify(a))){renderProgress();Sound.play('ok');const f=$('progressList').querySelector('.record');if(f)anim(f,'anim-pop')}else{$('progressList').textContent=t('saveFail');Sound.play('bad')}}
+function renderProgress(){const a=loadProgress();$('progressList').innerHTML=a.length?('<div>'+esc(t('totalRecords',{n:a.length}))+'</div>'+a.slice(0,7).map(x=>`<div class="record">${esc(x.date)} · ${esc(x.student)}<br><b lang="ru">${esc(x.topic)}</b> · ${esc(x.route)}<br>${esc(statusLabel(x))}</div>`).join('')):esc(t('noRecords'))}
+function csvCell(v){v=String(v==null?'':v);if(/^[=+\-@]/.test(v))v="'"+v;return '"'+v.replace(/"/g,'""')+'"'}
+function exportProgress(){const a=loadProgress();if(!a.length){$('progressList').textContent=t('noExport');return}
+ const rows=[t('csvHead').split(';'),...a.map(x=>[x.date,x.student,x.section||'',x.topic,x.route,statusLabel(x)])];
+ downloadBlob('5steps-progress.csv',new Blob(['﻿'+rows.map(r=>r.map(csvCell).join(';')).join('\r\n')],{type:'text/csv;charset=utf-8'}))}
+function clearProgress(){if(!loadProgress().length)return;if(confirm(t('clearConfirm'))){store.set('5steps-progress','[]');renderProgress()}}
+
+init();
+</script></body></html>
