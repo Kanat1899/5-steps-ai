@@ -422,7 +422,7 @@ async function playURL(url,id,slow){const p=new Audio(url);p.playbackRate=slow?.
 async function speak(text,slow){
  const phrase=String(text||'').trim();if(!phrase){setHearStatus(t('st_noword'));return}
  stopSpeech();const id=speakId;setHearStatus(t('st_prep'));
- if(/^https?:$/.test(location.protocol)&&!ttsOnlineFailed){
+ if(/^https?:$/.test(location.protocol)&&!/github\.io$/.test(location.hostname)&&!ttsOnlineFailed){
   try{await speakOnline(phrase,id,slow);return}
   catch(err){if(id!==speakId)return;ttsOnlineFailed=true;console.warn('Онлайн-голос недоступен, используется голос устройства.',err)}
  }
